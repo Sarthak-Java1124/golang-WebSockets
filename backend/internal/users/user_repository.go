@@ -1,0 +1,33 @@
+package users
+
+import (
+	"context"
+	"database/sql"
+	"log"
+)
+
+type DBTX interface {
+	ExecContext(ctx context.Context, query string, args ...interface{}) (sql.Result, error)
+	PrepareContext(context.Context, string) (*sql.Stmt, error)
+	QueryContext(context.Context, string, ...interface{}) (*sql.Rows, error)
+	QueryRowContext(context.Context, string, ...interface{}) *sql.Row
+}
+type repository struct {
+	db DBTX
+}
+
+func NewRepository(db *sql.DB) Repository {
+	return &repository{db: db}
+}
+
+func (r *repository) CreateUser(ctx context.Context, user *User) (*User, error) {
+	var lastInsertedId int
+	query := "INSERT INTO users(username , password , email) VALUES ($1 $2 $3) returning id"
+	err := r.db.QueryRowContext(ctx, query, user.Username, user.Password, user.Email).Scan(&lastInsertedId)
+	if err != nil {
+		log.Fatalf("The error in sending the query context is : ", err)
+		return &User{}, err
+	}
+	user.ID = int64(lastInsertedId)
+	return user, nil
+}
