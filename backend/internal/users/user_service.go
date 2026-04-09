@@ -4,6 +4,8 @@ import (
 	"context"
 	"strconv"
 	"time"
+
+	"github.com/Sarthak-Java1124/golang-WebSockets/backend/utils"
 )
 
 type service struct {
@@ -21,6 +23,7 @@ func NewService(repository Repository) Service {
 func (s *service) CreateUser(c context.Context, req *CreateUserReq) (*CreateUserRes, error) {
 	ctx, cancel := context.WithTimeout(c, s.timeout)
 	defer cancel()
+	hashedPassword := utils.HashPassword(req.Password)
 	u := &User{
 		Username: req.Username,
 		Email:    req.Email,
