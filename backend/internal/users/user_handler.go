@@ -1,6 +1,7 @@
 package users
 
 import (
+	"context"
 	"log"
 	"net/http"
 
@@ -19,13 +20,14 @@ func NewHandler(s Service) *Handlers {
 
 func (h *Handlers) CreateUser(c *gin.Context) {
 	var u CreateUserReq
-	err := c.ShouldBindJSON(&u); err != nil {
-		c.JSON(http.StatusBadRequest , gin.H{"error" : err.Error()})
+	if err := c.BindJSON(&u); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 	}
-	 res , err := h.s.CreateUser(c.Request.Context() , &u)
-	 if err != nil {
-		log.Fatal("The error in create user service is : " , err)
-	 }
-c.JSON(http.StatusOK , gin.H{"data": res})
+
+	res, err := h.s.CreateUser(context.Background(), &u)
+	if err != nil {
+		log.Fatal("The error in create user service is : ", err)
+	}
+	c.JSON(http.StatusOK, gin.H{"data": res})
 
 }

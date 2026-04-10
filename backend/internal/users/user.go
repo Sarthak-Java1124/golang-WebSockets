@@ -23,5 +23,5 @@ type Repository interface {
 }
 
 type Service interface {
-	CreateUser(ctx context.Context, req *CreateUserReq) (CreateUserRes, error)
+	CreateUser(ctx context.Context, req *CreateUserReq) (*CreateUserRes, error)
 }

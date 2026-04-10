@@ -25,7 +25,7 @@ func (r *repository) CreateUser(ctx context.Context, user *User) (*User, error) 
 	query := "INSERT INTO users(username , password , email) VALUES ($1 $2 $3) returning id"
 	err := r.db.QueryRowContext(ctx, query, user.Username, user.Password, user.Email).Scan(&lastInsertedId)
 	if err != nil {
-		log.Fatalf("The error in sending the query context is : ", err)
+		log.Fatalf("The error in sending the query context is : ", err.Error())
 		return &User{}, err
 	}
 	user.ID = int64(lastInsertedId)
