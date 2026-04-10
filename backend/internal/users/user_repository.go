@@ -22,11 +22,11 @@ func NewRepository(db *sql.DB) Repository {
 
 func (r *repository) CreateUser(ctx context.Context, user *User) (*User, error) {
 	var lastInsertedId int
-	query := "INSERT INTO users(username , password , email) VALUES ($1 $2 $3) returning id"
+	query := "INSERT INTO users (username, password, email) VALUES ($1, $2, $3) RETURNING id"
 	err := r.db.QueryRowContext(ctx, query, user.Username, user.Password, user.Email).Scan(&lastInsertedId)
 	if err != nil {
-		log.Fatalf("The error in sending the query context is : ", err.Error())
-		return &User{}, err
+		log.Printf("query error: %v", err)
+		return nil, err
 	}
 	user.ID = int64(lastInsertedId)
 	return user, nil

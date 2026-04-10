@@ -5,10 +5,10 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-var r gin.Engine
+var r *gin.Engine
 
 func InitRouter(userHandler *users.Handlers) {
-	r := gin.Default()
+	r = gin.Default()
 	r.POST("/signup", userHandler.CreateUser)
 }
 
