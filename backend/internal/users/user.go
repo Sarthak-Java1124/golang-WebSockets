@@ -20,8 +20,19 @@ type CreateUserRes struct {
 }
 type Repository interface {
 	CreateUser(ctx context.Context, user *User) (*User, error)
+	GetUsersByEmail(ctx context.Context, email string) (*User, error)
 }
 
+type LoginUserReq struct {
+	Email    string `json:"email" db:"email"`
+	Password string `json:"password" db:"password"`
+}
+type LoginUserRes struct {
+	accessToken string
+	ID          string `json:"id" db:"id"`
+	Username    string `json:"username" db:"username"`
+}
 type Service interface {
 	CreateUser(ctx context.Context, req *CreateUserReq) (*CreateUserRes, error)
+	Login(c context.Context, req *LoginUserReq) (*LoginUserRes, error)
 }

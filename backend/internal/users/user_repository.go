@@ -31,3 +31,15 @@ func (r *repository) CreateUser(ctx context.Context, user *User) (*User, error) 
 	user.ID = int64(lastInsertedId)
 	return user, nil
 }
+
+func (r *repository) GetUsersByEmail(ctx context.Context, email string) (*User, error) {
+	var user User
+	query := "SELECT id,email,username,password FROM users  WHERE email = $1"
+	err := r.db.QueryRowContext(ctx, query, email).Scan(&user.ID, &user.Email, &user.Username, &user.Password)
+	if err != nil {
+		log.Println("The error in getting users is : ", err)
+		return nil, err
+	}
+	return &user, err
+
+}

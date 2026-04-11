@@ -2,6 +2,7 @@ package users
 
 import (
 	"context"
+	"log"
 	"strconv"
 	"time"
 
@@ -39,4 +40,28 @@ func (s *service) CreateUser(c context.Context, req *CreateUserReq) (*CreateUser
 		Email:    r.Email,
 	}
 	return res, err
+}
+
+func (s *service) Login(c context.Context, req *LoginUserReq) (*LoginUserRes, error) {
+	ctx, cancel := context.WithTimeout(c, s.timeout)
+	defer cancel()
+	u, err := s.Repository.GetUsersByEmail(ctx, req.Email)
+	if err != nil {
+		log.Println("The error in finding users by email is :", err)
+		return nil, err
+	}
+	err = utils.VerifyHashPassword(req.Password, u.Password)
+	if err != nil {
+		return &LoginUserRes{}, err
+	}
+	accessToken, err := utils.GenerateJWT(u.Email)
+	if err != nil {
+		log.Println("The error in generating the jwt is : ", err)
+	}
+	var loginResponse LoginUserRes
+	loginResponse.accessToken = accessToken
+	loginResponse.Username = u.Username
+	loginResponse.ID = strconv.Itoa(int(u.ID))
+	return &loginResponse, nil
+
 }
