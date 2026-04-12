@@ -18,6 +18,16 @@ func NewHandler(s Service) *Handlers {
 	}
 }
 
+// CreateUser godoc
+// @Summary Create a new user
+// @Description Create a new user with username, email, password
+// @Tags users
+// @Accept json
+// @Produce json
+// @Param user body CreateUserReq true "User data"
+// @Success 200 {object} CreateUserRes
+// @Failure 400 {object} map[string]string
+// @Router /signup [post]
 func (h *Handlers) CreateUser(c *gin.Context) {
 	var u CreateUserReq
 	if err := c.BindJSON(&u); err != nil {
@@ -32,6 +42,17 @@ func (h *Handlers) CreateUser(c *gin.Context) {
 
 }
 
+// LoginHandler godoc
+// @Summary Login user
+// @Description Login with email and password
+// @Tags users
+// @Accept json
+// @Produce json
+// @Param user body LoginUserReq true "Login data"
+// @Success 200 {object} LoginUserRes
+// @Failure 400 {object} map[string]string
+// @Failure 500 {object} map[string]string
+// @Router /login [post]
 func (h *Handlers) LoginHandler(c *gin.Context) {
 	var u LoginUserReq
 	if err := c.ShouldBindJSON(&u); err != nil {

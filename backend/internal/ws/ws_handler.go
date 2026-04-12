@@ -22,6 +22,16 @@ type CreateRoomReq struct {
 	Name string `json:"name"`
 }
 
+// CreateRoom godoc
+// @Summary Create a room
+// @Description Create a new WebSocket room
+// @Tags websocket
+// @Accept json
+// @Produce json
+// @Param room body CreateRoomReq true "Room data"
+// @Success 200 {object} CreateRoomReq
+// @Failure 500 {object} map[string]string
+// @Router /ws/create-rooms [post]
 func (h *Handler) CreateRoom(c *gin.Context) {
 	var req CreateRoomReq
 	if err := c.ShouldBindJSON(&req); err != nil {
@@ -80,6 +90,13 @@ type RoomRes struct {
 	Name string `json:"name"`
 }
 
+// GetRooms godoc
+// @Summary Get all rooms
+// @Description Retrieve list of all rooms
+// @Tags websocket
+// @Produce json
+// @Success 200 {object} map[string]interface{}
+// @Router /ws/get-rooms [post]
 func (h *Handler) GetRooms(c *gin.Context) {
 	rooms := make([]RoomRes, 0)
 
@@ -97,6 +114,14 @@ type ClientRes struct {
 	Username string `json:"username"`
 }
 
+// GetClients godoc
+// @Summary Get clients in a room
+// @Description Retrieve list of clients in a specific room
+// @Tags websocket
+// @Produce json
+// @Param roomId path string true "Room ID"
+// @Success 200 {array} ClientRes
+// @Router /ws/getClients/{roomId} [get]
 func (h *Handler) GetClients(c *gin.Context) {
 	var clients []ClientRes
 	roomId := c.Param("roomId")

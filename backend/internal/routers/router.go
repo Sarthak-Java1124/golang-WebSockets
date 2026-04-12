@@ -4,6 +4,8 @@ import (
 	"github.com/Sarthak-Java1124/golang-WebSockets/backend/internal/users"
 	"github.com/Sarthak-Java1124/golang-WebSockets/backend/internal/ws"
 	"github.com/gin-gonic/gin"
+	ginSwagger "github.com/swaggo/gin-swagger"
+	files "github.com/swaggo/files"
 )
 
 var r *gin.Engine
@@ -16,6 +18,7 @@ func InitRouter(userHandler *users.Handlers, wsHandler *ws.Handler) {
 	r.POST("ws/join-room/:room_id", wsHandler.JoinRoom)
 	r.POST("/ws/get-rooms", wsHandler.GetRooms)
 	r.GET("/ws/getClients/:roomId", wsHandler.GetClients)
+	r.GET("/swagger/*any", ginSwagger.WrapHandler(files.Handler))
 }
 
 func Start(addr string) error {

@@ -1,0 +1,181 @@
+basePath: /
+definitions:
+  users.CreateUserReq:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+      username:
+        type: string
+    type: object
+  users.CreateUserRes:
+    properties:
+      email:
+        type: string
+      id:
+        type: string
+      username:
+        type: string
+    type: object
+  users.LoginUserReq:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+    type: object
+  users.LoginUserRes:
+    properties:
+      id:
+        type: string
+      username:
+        type: string
+    type: object
+  ws.ClientRes:
+    properties:
+      id:
+        type: string
+      username:
+        type: string
+    type: object
+  ws.CreateRoomReq:
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+    type: object
+host: localhost:8089
+info:
+  contact: {}
+  description: This is a sample server for WebSocket chat.
+  title: Go WebSocket API
+  version: "1.0"
+paths:
+  /login:
+    post:
+      consumes:
+      - application/json
+      description: Login with email and password
+      parameters:
+      - description: Login data
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/users.LoginUserReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/users.LoginUserRes'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Login user
+      tags:
+      - users
+  /signup:
+    post:
+      consumes:
+      - application/json
+      description: Create a new user with username, email, password
+      parameters:
+      - description: User data
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/users.CreateUserReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/users.CreateUserRes'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Create a new user
+      tags:
+      - users
+  /ws/create-rooms:
+    post:
+      consumes:
+      - application/json
+      description: Create a new WebSocket room
+      parameters:
+      - description: Room data
+        in: body
+        name: room
+        required: true
+        schema:
+          $ref: '#/definitions/ws.CreateRoomReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/ws.CreateRoomReq'
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Create a room
+      tags:
+      - websocket
+  /ws/get-rooms:
+    post:
+      description: Retrieve list of all rooms
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Get all rooms
+      tags:
+      - websocket
+  /ws/getClients/{roomId}:
+    get:
+      description: Retrieve list of clients in a specific room
+      parameters:
+      - description: Room ID
+        in: path
+        name: roomId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/ws.ClientRes'
+            type: array
+      summary: Get clients in a room
+      tags:
+      - websocket
+swagger: "2.0"
