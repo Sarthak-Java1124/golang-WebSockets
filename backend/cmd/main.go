@@ -21,7 +21,7 @@ func main() {
 
 	hub := ws.NewHub()
 	wsHandler := ws.NewHandler(hub)
-
+	go hub.Run()
 	routers.InitRouter(userHandler, wsHandler)
 	routers.Start("localhost:8089")
 

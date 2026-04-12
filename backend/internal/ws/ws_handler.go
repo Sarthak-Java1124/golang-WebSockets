@@ -67,5 +67,10 @@ func (h *Handler) JoinRoom(c *gin.Context) {
 		Username: username,
 		Content:  "A new user has joined the room",
 	}
+	h.Hub.Register <- cl
+	h.Hub.Broadcast <- m
+
+	go cl.writeMessage()
+	cl.readMessage(h.Hub)
 
 }
