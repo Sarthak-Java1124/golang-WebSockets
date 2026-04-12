@@ -74,3 +74,20 @@ func (h *Handler) JoinRoom(c *gin.Context) {
 	cl.readMessage(h.Hub)
 
 }
+
+type RoomRes struct {
+	ID   string `json:"id"`
+	Name string `json:"name"`
+}
+
+func (h *Handler) GetRooms(c *gin.Context) {
+	rooms := make([]RoomRes, 0)
+
+	for _, r := range h.Hub.Rooms {
+		rooms = append(rooms, RoomRes{
+			ID:   r.ID,
+			Name: r.Name,
+		})
+	}
+	c.JSON(http.StatusOK, gin.H{"message": "Room Response fetch success", "data": rooms})
+}
