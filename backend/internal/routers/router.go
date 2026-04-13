@@ -4,8 +4,8 @@ import (
 	"github.com/Sarthak-Java1124/golang-WebSockets/backend/internal/users"
 	"github.com/Sarthak-Java1124/golang-WebSockets/backend/internal/ws"
 	"github.com/gin-gonic/gin"
-	ginSwagger "github.com/swaggo/gin-swagger"
 	files "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
 var r *gin.Engine
